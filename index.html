@@ -14,18 +14,14 @@
   import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js';
 
   const firebaseConfig = {
-    apiKey: "AIzaSyBWwMBwWwog_CE4H18VPGJbJFGaBzrEi2c",
-    authDomain: "jaky-coja-app.firebaseapp.com",
-    projectId: "jaky-coja-app",
-    storageBucket: "jaky-coja-app.firebasestorage.app",
-    messagingSenderId: "893850040157",
-    appId: "1:893850040157:web:d7bc187ae1f2507041dab4",
-    measurementId: "G-GR80VMRGJW"
+    // ... la tua config esistente
   };
 
-  // Inizializza Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  
+  // Variabile per tracciare se è la prima verifica
+  let isInitialCheck = true;
 
   // Rendi disponibili le funzioni globalmente
   window.firebaseAuth = auth;
@@ -37,6 +33,16 @@
   // Gestisci lo stato di autenticazione
   onAuthStateChanged(auth, (user) => {
     window.currentUser = user;
+    
+    if (isInitialCheck) {
+      // Nascondi il loading overlay
+      const overlay = document.getElementById('loadingOverlay');
+      if (overlay) {
+        overlay.classList.add('hidden');
+      }
+      isInitialCheck = false;
+    }
+    
     if (user) {
       console.log('User logged in:', user.email);
       showPage('mainPage');
@@ -697,12 +703,45 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,0.3);
   border:1px solid rgba(255, 255, 255, 0.1);
 }
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.3s ease;
+}
+
+.loading-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(220, 255, 0, 0.3);
+  border-top: 3px solid #dcff00;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
 </style>
 </head>
 <body>
 
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+</div>
+
 <!-- Pagina di Login -->
-<div class="page active" id="loginPage">
+<div class="page" id="loginPage">
   <div class="auth-container">
     <div class="auth-box">
       <div class="auth-logo">JC</div>
@@ -871,7 +910,17 @@ let currentUser = null;
 function showPage(pageId) {
   const pages = document.querySelectorAll('.page');
   pages.forEach(page => page.classList.remove('active'));
-  document.getElementById(pageId).classList.add('active');
+  
+  const targetPage = document.getElementById(pageId);
+  if (targetPage) {
+    targetPage.classList.add('active');
+  }
+  
+  // Assicurati che il loading sia nascosto quando mostri una pagina
+  const overlay = document.getElementById('loadingOverlay');
+  if (overlay && !overlay.classList.contains('hidden')) {
+    overlay.classList.add('hidden');
+  }
 }
 
 
