@@ -24,12 +24,25 @@
   };
 
   const app = initializeApp(firebaseConfig);
-  window.auth = getAuth(app);
-  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-  window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
-  window.signOut = signOut;
-  window.onAuthStateChanged = onAuthStateChanged;
-  window.sendPasswordResetEmail = sendPasswordResetEmail;
+  const auth = getAuth(app);
+
+  // Rendi disponibili globalmente
+  window.firebaseAuth = auth;
+  window.firebaseSignIn = signInWithEmailAndPassword;
+  window.firebaseCreateUser = createUserWithEmailAndPassword;
+  window.firebaseSignOut = signOut;
+  window.firebaseAuthStateChanged = onAuthStateChanged;
+  window.firebaseSendPasswordReset = sendPasswordResetEmail;
+
+  // Inizializza l'observer dello stato auth
+  onAuthStateChanged(auth, (user) => {
+    window.currentUser = user;
+    if (user) {
+      showPage('mainPage');
+    } else {
+      showPage('loginPage');
+    }
+  });
 </script>
 
 <style>
@@ -880,8 +893,9 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   submitBtn.disabled = true;
   
   try {
-    await window.signInWithEmailAndPassword(window.auth, email, password);
+    await window.firebaseSignIn(window.firebaseAuth, email, password);
   } catch (error) {
+    console.error('Login error:', error);
     let errorMessage = 'Errore durante il login';
     if (error.code === 'auth/user-not-found') {
       errorMessage = 'Account non trovato';
@@ -924,8 +938,11 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
   submitBtn.disabled = true;
   
   try {
-    await window.createUserWithEmailAndPassword(window.auth, email, password);
+    console.log('Tentativo registrazione per:', email);
+    const userCredential = await window.firebaseCreateUser(window.firebaseAuth, email, password);
+    console.log('Registrazione completata:', userCredential.user);
   } catch (error) {
+    console.error('Registration error:', error);
     let errorMessage = 'Errore durante la registrazione';
     if (error.code === 'auth/email-already-in-use') {
       errorMessage = 'Email già registrata';
@@ -973,10 +990,10 @@ document.getElementById('resetPasswordForm').addEventListener('submit', async (e
   }
 });
 
-// Funzione di logout
+// Gestione logout
 async function logout() {
   try {
-    await window.signOut(window.auth);
+    await window.firebaseSignOut(window.firebaseAuth);
   } catch (error) {
     console.error('Errore durante il logout:', error);
   }
