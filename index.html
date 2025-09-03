@@ -901,7 +901,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     } else if (error.code === 'auth/too-many-requests') {
       errorMessage = 'Troppi tentativi. Riprova più tardi';
     }
-    errorDiv.innerHTML = '<div class="error-message">${errorMessage}</div>';
+    errorDiv.innerHTML = `<div class="error-message">${errorMessage}</div>`;
   } finally {
     submitBtn.classList.remove('loading');
     submitBtn.disabled = false;
@@ -946,7 +946,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     } else if (error.code === 'auth/weak-password') {
       errorMessage = 'Password troppo debole';
     }
-    errorDiv.innerHTML = '<div class="error-message">${errorMessage}</div>';
+    errorDiv.innerHTML = `<div class="error-message">${errorMessage}</div>`;
   } finally {
     submitBtn.classList.remove('loading');
     submitBtn.disabled = false;
@@ -978,7 +978,7 @@ document.getElementById('resetPasswordForm').addEventListener('submit', async (e
     } else if (error.code === 'auth/invalid-email') {
       errorMessage = 'Email non valida';
     }
-    errorDiv.innerHTML = '<div class="error-message">${errorMessage}</div>';
+    errorDiv.innerHTML = `<div class="error-message">${errorMessage}</div>`;
   } finally {
     submitBtn.classList.remove('loading');
     submitBtn.disabled = false;
@@ -994,34 +994,44 @@ async function logout() {
   }
 }
 
-// Funzioni per i workout esistenti
+// Funzioni per i workout - VERSIONE CORRETTA
 function startABSWorkout(){
-  if (currentUser) {
+  if (window.currentUser) {  // Usa window.currentUser invece di currentUser
     window.location.href='abs-workout.html';
+  } else {
+    console.log('User not authenticated');
   }
 }
 
 function startShortABSWorkout(){
-  if (currentUser) {
+  if (window.currentUser) {
     window.location.href='short-abs-workout.html';
+  } else {
+    console.log('User not authenticated');
   }
 }
 
 function startPushUpChallenge(){
-  if (currentUser) {
+  if (window.currentUser) {
     window.location.href='push-up-challenge.html';
+  } else {
+    console.log('User not authenticated');
   }
 }
 
 function startExtremePushUpChallenge(){
-  if (currentUser) {
+  if (window.currentUser) {
     window.location.href='extreme-pushup-challenge.html';
+  } else {
+    console.log('User not authenticated');
   }
 }
 
 function startExtremePullUpChallenge(){
-  if (currentUser) {
+  if (window.currentUser) {
     window.location.href='extreme-pullup-challenge.html';
+  } else {
+    console.log('User not authenticated');
   }
 }
 
