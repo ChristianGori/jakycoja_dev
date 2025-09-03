@@ -62,6 +62,8 @@ onAuthStateChanged(auth, async (user) => {
     const isProfileComplete = await checkUserProfile(user.uid);
     if (isProfileComplete) {
       showPage('mainPage');
+	  // Carica dati header
+	  loadUserHeaderData();
     } else {
       showPage('profilePage');
     }
@@ -810,6 +812,216 @@ body{
   }
 }
 
+/* Profile Dropdown Styles */
+.profile-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-trigger {
+  cursor: pointer;
+}
+
+.profile-image {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #dcff00 0%, #b8d600 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000000;
+  box-shadow: 0 4px 15px rgba(220, 255, 0, 0.4);
+  border: 2px solid rgba(220, 255, 0, 0.3);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.profile-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(220, 255, 0, 0.6);
+}
+
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile-image span {
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 1px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: rgba(45, 45, 48, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 8px 0;
+  min-width: 180px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  margin-top: 8px;
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  padding: 12px 16px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.dropdown-item:hover {
+  background: rgba(60, 60, 67, 0.8);
+  color: #dcff00;
+}
+
+.dropdown-item.logout {
+  color: #ff6b6b;
+}
+
+.dropdown-item.logout:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ff5252;
+}
+
+.dropdown-item svg {
+  opacity: 0.7;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 8px 0;
+}
+
+@media (max-width: 768px) {
+  .dropdown-menu {
+    min-width: 160px;
+  }
+  
+  .profile-image {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+}
+
+.header-back {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.back-btn-inline {
+  background: rgba(60, 60, 67, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #ffffff;
+}
+
+.back-btn-inline:hover {
+  background: rgba(60, 60, 67, 0.8);
+  transform: translateX(-2px);
+}
+
+.profile-view {
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.profile-field {
+  margin-bottom: 20px;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-field:last-child {
+  border-bottom: none;
+}
+
+.field-label {
+  font-size: 12px;
+  color: #dcff00;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+
+.field-value {
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.field-value.empty {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+.profile-image-view {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-image-large {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #dcff00;
+  box-shadow: 0 8px 25px rgba(220, 255, 0, 0.4);
+}
+
+.profile-initials-large {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #dcff00 0%, #b8d600 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 auto;
+  box-shadow: 0 8px 25px rgba(220, 255, 0, 0.4);
+  border: 3px solid rgba(220, 255, 0, 0.3);
+}
+
 </style>
 </head>
 <body>
@@ -961,12 +1173,58 @@ body{
   </div>
 </div>
 
+<!-- Pagina Visualizzazione Profilo -->
+<div class="page" id="viewProfilePage">
+  <div class="auth-container">
+    <div class="auth-box" style="max-width: 500px;">
+      <div class="header-back">
+        <button class="back-btn-inline" onclick="showPage('mainPage')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        <h1 class="auth-title">Il Mio Profilo</h1>
+      </div>
+      
+      <div class="profile-view" id="profileViewContent">
+        <!-- Il contenuto verrà popolato dinamicamente -->
+      </div>
+      
+      <button class="btn-primary" onclick="editProfile()">Modifica Profilo</button>
+    </div>
+  </div>
+</div>
+
 <!-- Pagina principale (esistente) -->
 <div class="page" id="mainPage">
   <div class="header">
     <div class="header-top">
-      <button class="logout-btn" onclick="logout()">Logout</button>
+  <div class="profile-dropdown">
+    <div class="profile-trigger" id="profileTrigger">
+      <div class="profile-image" id="headerProfileImage">
+        <span id="headerInitials">JC</span>
+      </div>
     </div>
+    <div class="dropdown-menu" id="dropdownMenu">
+      <div class="dropdown-item" onclick="showProfile()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        Il Mio Profilo
+      </div>
+      <div class="dropdown-divider"></div>
+      <div class="dropdown-item logout" onclick="logout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16,17 21,12 16,7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        Logout
+      </div>
+    </div>
+  </div>
+</div>
     <div class="user-profile">
       <div class="profile-avatar">JC</div>
       <div class="user-info">
@@ -1367,7 +1625,10 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
       weight: document.getElementById('weight').value || null,
       height: document.getElementById('height').value || null,
       fitnessLevel: document.getElementById('fitnessLevel').value,
-      profileImage: null, // Per ora, gestiremo le immagini in un secondo momento
+      profileImage: document.getElementById('imagePreview').querySelector('img') ? 
+	  document.getElementById('imagePreview').querySelector('img').src : null,
+	  profileImageData: document.getElementById('imagePreview').querySelector('img') ? 
+	  document.getElementById('imagePreview').querySelector('img').src : null,
       updatedAt: new Date().toISOString()
     };
     
@@ -1379,6 +1640,11 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     
     console.log('Profilo salvato con successo');
     showPage('mainPage');
+	
+	// Aggiorna header dopo salvataggio
+setTimeout(() => {
+  loadUserHeaderData();
+}, 500);
     
   } catch (error) {
     console.error('Errore nel salvataggio profilo:', error);
@@ -1404,6 +1670,180 @@ document.getElementById('profileImage').addEventListener('change', function(e) {
     preview.innerHTML = '';
   }
 });
+
+// Gestione dropdown profilo
+document.addEventListener('DOMContentLoaded', function() {
+  const profileTrigger = document.getElementById('profileTrigger');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+  
+  if (profileTrigger && dropdownMenu) {
+    profileTrigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle('show');
+    });
+    
+    // Chiudi dropdown cliccando fuori
+    document.addEventListener('click', function() {
+      dropdownMenu.classList.remove('show');
+    });
+    
+    // Previeni chiusura cliccando sul menu
+    dropdownMenu.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  }
+});
+
+// Carica e mostra i dati utente nell'header
+async function loadUserHeaderData() {
+  if (!window.currentUser) return;
+  
+  try {
+    const userDoc = await window.firestoreGetDoc(
+      window.firestoreDoc(window.firebaseDB, 'users', window.currentUser.uid)
+    );
+    
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      updateHeaderProfile(userData);
+    }
+  } catch (error) {
+    console.error('Errore nel caricamento dati header:', error);
+  }
+}
+
+// Aggiorna l'immagine profilo nell'header
+function updateHeaderProfile(userData) {
+  const headerImage = document.getElementById('headerProfileImage');
+  const headerInitials = document.getElementById('headerInitials');
+  
+  if (userData.profileImageData) {
+    headerImage.innerHTML = `<img src="${userData.profileImageData}" alt="Profilo">`;
+  } else if (userData.firstName && userData.lastName) {
+    const initials = userData.firstName.charAt(0).toUpperCase() + 
+                    userData.lastName.charAt(0).toUpperCase();
+    headerInitials.textContent = initials;
+  }
+}
+
+// Mostra pagina profilo
+function showProfile() {
+  loadProfileView();
+  showPage('viewProfilePage');
+}
+
+// Carica dati per visualizzazione profilo
+async function loadProfileView() {
+  if (!window.currentUser) return;
+  
+  try {
+    const userDoc = await window.firestoreGetDoc(
+      window.firestoreDoc(window.firebaseDB, 'users', window.currentUser.uid)
+    );
+    
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      renderProfileView(userData);
+    }
+  } catch (error) {
+    console.error('Errore nel caricamento profilo:', error);
+  }
+}
+
+// Renderizza visualizzazione profilo
+function renderProfileView(userData) {
+  const container = document.getElementById('profileViewContent');
+  
+  const fitnessLevelMap = {
+    'base': 'Base - Inizio ora ad allenarmi',
+    'intermedio': 'Intermedio - Mi alleno da qualche mese',
+    'avanzato': 'Avanzato - Mi alleno regolarmente da anni'
+  };
+  
+  container.innerHTML = `
+    <div class="profile-image-view">
+      ${userData.profileImageData ? 
+        `<img src="${userData.profileImageData}" alt="Profilo" class="profile-image-large">` :
+        `<div class="profile-initials-large">${userData.firstName?.charAt(0) || ''}${userData.lastName?.charAt(0) || ''}</div>`
+      }
+    </div>
+    
+    <div class="profile-field">
+      <div class="field-label">Nome</div>
+      <div class="field-value">${userData.firstName || ''}</div>
+    </div>
+    
+    <div class="profile-field">
+      <div class="field-label">Cognome</div>
+      <div class="field-value">${userData.lastName || ''}</div>
+    </div>
+    
+    <div class="profile-field">
+      <div class="field-label">Nickname</div>
+      <div class="field-value">${userData.nickname || ''}</div>
+    </div>
+    
+    <div class="profile-field">
+      <div class="field-label">Data di Nascita</div>
+      <div class="field-value">${userData.birthDate ? new Date(userData.birthDate).toLocaleDateString('it-IT') : ''}</div>
+    </div>
+    
+    <div class="profile-field">
+      <div class="field-label">Peso</div>
+      <div class="field-value ${!userData.weight ? 'empty' : ''}">${userData.weight ? userData.weight + ' kg' : 'Non specificato'}</div>
+    </div>
+    
+    <div class="profile-field">
+      <div class="field-label">Altezza</div>
+      <div class="field-value ${!userData.height ? 'empty' : ''}">${userData.height ? userData.height + ' cm' : 'Non specificata'}</div>
+    </div>
+    
+    <div class="profile-field">
+      <div class="field-label">Livello di Allenamento</div>
+      <div class="field-value">${fitnessLevelMap[userData.fitnessLevel] || userData.fitnessLevel || ''}</div>
+    </div>
+  `;
+}
+
+// Modifica profilo
+function editProfile() {
+  loadProfileForEdit();
+  showPage('profilePage');
+}
+
+// Carica dati per modifica
+async function loadProfileForEdit() {
+  if (!window.currentUser) return;
+  
+  try {
+    const userDoc = await window.firestoreGetDoc(
+      window.firestoreDoc(window.firebaseDB, 'users', window.currentUser.uid)
+    );
+    
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      populateProfileForm(userData);
+    }
+  } catch (error) {
+    console.error('Errore nel caricamento dati per modifica:', error);
+  }
+}
+
+// Popola form con dati esistenti
+function populateProfileForm(userData) {
+  document.getElementById('firstName').value = userData.firstName || '';
+  document.getElementById('lastName').value = userData.lastName || '';
+  document.getElementById('nickname').value = userData.nickname || '';
+  document.getElementById('birthDate').value = userData.birthDate || '';
+  document.getElementById('weight').value = userData.weight || '';
+  document.getElementById('height').value = userData.height || '';
+  document.getElementById('fitnessLevel').value = userData.fitnessLevel || '';
+  
+  if (userData.profileImageData) {
+    document.getElementById('imagePreview').innerHTML = 
+      `<img src="${userData.profileImageData}" alt="Anteprima" class="preview-image">`;
+  }
+}
 </script>
 </body>
 </html>
