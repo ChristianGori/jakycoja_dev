@@ -1745,25 +1745,19 @@ function updateHeaderProfile(userData) {
   }
 }
 
-// Mostra pagina profilo
-async function showProfile() {
-  console.log('showProfile chiamata');
+// Versione di test semplificata
+function showProfile() {
+  console.log('Test showProfile chiamata');
+  alert('Funzione showProfile chiamata!'); // Rimuovi dopo il test
   
-  // Chiudi il dropdown prima
+  // Chiudi dropdown
   const dropdownMenu = document.getElementById('dropdownMenu');
   if (dropdownMenu) {
     dropdownMenu.classList.remove('show');
   }
   
-  try {
-    // Carica i dati del profilo prima di mostrare la pagina
-    await loadProfileView();
-    showPage('viewProfilePage');
-  } catch (error) {
-    console.error('Errore nel caricamento profilo:', error);
-    // Mostra la pagina comunque, anche se c'è un errore
-    showPage('viewProfilePage');
-  }
+  // Vai direttamente alla pagina
+  showPage('viewProfilePage');
 }
 
 // Carica dati per visualizzazione profilo
