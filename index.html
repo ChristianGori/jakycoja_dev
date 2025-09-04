@@ -320,25 +320,108 @@ body{
   z-index:2;
 }
 
-.logout-btn{
-  background:rgba(239, 68, 68, 0.8);
-  color:white;
-  border:none;
-  border-radius:20px;
-  padding:10px 20px;
-  font-size:12px;
-  font-weight:600;
-  cursor:pointer;
-  transition:all 0.3s ease;
-  text-transform:uppercase;
-  letter-spacing:1px;
-  font-family:'Oswald', sans-serif;
+.user-menu-container {
+  position: relative;
+  display: inline-block;
 }
 
-.logout-btn:hover{
-  background:#dc2626;
-  transform:translateY(-2px);
-  box-shadow:0 4px 15px rgba(239, 68, 68, 0.4);
+.user-menu-btn {
+  background: linear-gradient(135deg, #dcff00 0%, #b8d600 100%);
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(220, 255, 0, 0.4);
+  border: 2px solid rgba(220, 255, 0, 0.3);
+}
+
+.user-menu-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(220, 255, 0, 0.6);
+}
+
+.user-initials {
+  font-size: 16px;
+  font-weight: 700;
+  color: #000000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Oswald', sans-serif;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 55px;
+  right: 0;
+  background: rgba(45, 45, 48, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+  min-width: 180px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 1000;
+}
+
+.user-dropdown.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Oswald', sans-serif;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  margin: 4px;
+}
+
+.dropdown-item:hover {
+  background: rgba(220, 255, 0, 0.1);
+  color: #dcff00;
+  transform: translateX(5px);
+}
+
+.dropdown-item:first-child {
+  margin-top: 8px;
+}
+
+.dropdown-item:last-child {
+  margin-bottom: 8px;
+}
+
+.dropdown-item span {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.logout-item:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ff6b6b;
 }
 
 .user-profile{
@@ -641,6 +724,16 @@ body{
   
   .profile-avatar{
     margin-right:0;
+  }
+  
+  .user-dropdown {
+    right: -10px;
+    min-width: 160px;
+  }
+  
+  .dropdown-item {
+    padding: 12px 16px;
+    font-size: 13px;
   }
 }
 
@@ -965,8 +1058,20 @@ body{
 <div class="page" id="mainPage">
   <div class="header">
     <div class="header-top">
-      <button class="logout-btn" onclick="logout()">Logout</button>
+  <div class="user-menu-container">
+    <button class="user-menu-btn" id="userMenuBtn" onclick="toggleUserMenu()">
+      <span class="user-initials" id="userInitials">JC</span>
+    </button>
+    <div class="user-dropdown" id="userDropdown">
+      <a href="profile.html" class="dropdown-item">
+        <span>👤</span> Profilo
+      </a>
+      <button onclick="logout()" class="dropdown-item logout-item">
+        <span>🚪</span> Logout
+      </button>
     </div>
+  </div>
+</div>
     <div class="user-profile">
       <div class="profile-avatar">JC</div>
       <div class="user-info">
@@ -1340,6 +1445,11 @@ async function checkUserProfile(userId) {
     const userData = userDoc.data();
     const requiredFields = ['firstName', 'lastName', 'nickname', 'birthDate', 'fitnessLevel'];
     
+    // Aggiorna le iniziali se i dati sono disponibili
+    if (userData.firstName && userData.lastName) {
+      updateUserInitials(userData.firstName, userData.lastName);
+    }
+    
     return requiredFields.every(field => userData[field] && userData[field].trim() !== '');
   } catch (error) {
     console.error('Errore nel controllo profilo:', error);
@@ -1404,6 +1514,31 @@ document.getElementById('profileImage').addEventListener('change', function(e) {
     preview.innerHTML = '';
   }
 });
+
+// Funzione per mostrare/nascondere il menu utente
+function toggleUserMenu() {
+  const dropdown = document.getElementById('userDropdown');
+  dropdown.classList.toggle('show');
+}
+
+// Chiudi il menu se si clicca fuori
+document.addEventListener('click', function(event) {
+  const menuContainer = document.querySelector('.user-menu-container');
+  const dropdown = document.getElementById('userDropdown');
+  
+  if (!menuContainer.contains(event.target)) {
+    dropdown.classList.remove('show');
+  }
+});
+
+// Funzione per aggiornare le iniziali dell'utente
+function updateUserInitials(firstName, lastName) {
+  const initialsElement = document.getElementById('userInitials');
+  if (firstName && lastName && initialsElement) {
+    const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+    initialsElement.textContent = initials;
+  }
+}
 </script>
 </body>
 </html>
