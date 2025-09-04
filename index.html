@@ -1209,16 +1209,15 @@ body{
         <span id="headerInitials">JC</span>
       </div>
     </div>
-    <div class="dropdown-menu" id="dropdownMenu">
-      <div class="dropdown-item" onclick="showProfile()">
-		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-			<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-			<circle cx="12" cy="7" r="4"></circle>
-		</svg>
-		Il Mio Profilo
-		</div>
-      <div class="dropdown-divider"></div>
-      <div class="dropdown-item logout" onclick="logout()">
+    <div class="dropdown-item" id="profileMenuItem">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+    <circle cx="12" cy="7" r="4"></circle>
+  </svg>
+  Il Mio Profilo
+</div>
+<div class="dropdown-divider"></div>
+<div class="dropdown-item logout" id="logoutMenuItem">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
           <polyline points="16,17 21,12 16,7"></polyline>
@@ -1675,11 +1674,12 @@ document.getElementById('profileImage').addEventListener('change', function(e) {
   }
 });
 
-// Gestione dropdown profilo
 // Funzione per inizializzare il dropdown
 function initializeProfileDropdown() {
   const profileTrigger = document.getElementById('profileTrigger');
   const dropdownMenu = document.getElementById('dropdownMenu');
+  const profileMenuItem = document.getElementById('profileMenuItem');
+  const logoutMenuItem = document.getElementById('logoutMenuItem');
   
   if (profileTrigger && dropdownMenu) {
     // Rimuovi event listener esistenti per evitare duplicati
@@ -1704,6 +1704,28 @@ function initializeProfileDropdown() {
     console.log('Dropdown profilo inizializzato');
   } else {
     console.log('Elementi dropdown non trovati');
+  }
+  
+  // Aggiungi event listener per i menu item
+  if (profileMenuItem) {
+    profileMenuItem.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log('Profile menu item cliccato');
+      showProfile();
+    });
+    console.log('Profile menu item inizializzato');
+  } else {
+    console.log('Profile menu item non trovato');
+  }
+  
+  if (logoutMenuItem) {
+    logoutMenuItem.addEventListener('click', function(e) {
+      e.preventDefault();
+      logout();
+    });
+    console.log('Logout menu item inizializzato');
+  } else {
+    console.log('Logout menu item non trovato');
   }
 }
 
@@ -1747,18 +1769,6 @@ function updateHeaderProfile(userData) {
 
 // Versione di test semplificata
 function showProfile() {
-  console.log('Test showProfile chiamata');
-  alert('Funzione showProfile chiamata!'); // Rimuovi dopo il test
-  
-  // Chiudi dropdown
-  const dropdownMenu = document.getElementById('dropdownMenu');
-  if (dropdownMenu) {
-    dropdownMenu.classList.remove('show');
-  }
-  
-  // Vai direttamente alla pagina
-  showPage('viewProfilePage');
-}
 
 // Carica dati per visualizzazione profilo
 async function loadProfileView() {
