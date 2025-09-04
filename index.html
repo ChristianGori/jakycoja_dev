@@ -43,6 +43,25 @@
   window.firebaseSignOut = signOut;
   window.firebaseSendPasswordReset = sendPasswordResetEmail;
 
+  // Funzione per controllare se il profilo è completo
+async function checkUserProfile(userId) {
+  try {
+    const userDoc = await window.firestoreGetDoc(window.firestoreDoc(window.firebaseDB, 'users', userId));
+    
+    if (!userDoc.exists()) {
+      return false;
+    }
+    
+    const userData = userDoc.data();
+    const requiredFields = ['firstName', 'lastName', 'nickname', 'birthDate', 'fitnessLevel'];
+    
+    return requiredFields.every(field => userData[field] && userData[field].trim() !== '');
+  } catch (error) {
+    console.error('Errore nel controllo profilo:', error);
+    return false;
+  }
+}
+  
   // Gestisci lo stato di autenticazione
 onAuthStateChanged(auth, async (user) => {
   window.currentUser = user;
@@ -1589,24 +1608,6 @@ window.addEventListener('load',()=>{
   } catch(e) {}
 });
 
-// Funzione per controllare se il profilo è completo
-async function checkUserProfile(userId) {
-  try {
-    const userDoc = await window.firestoreGetDoc(window.firestoreDoc(window.firebaseDB, 'users', userId));
-    
-    if (!userDoc.exists()) {
-      return false;
-    }
-    
-    const userData = userDoc.data();
-    const requiredFields = ['firstName', 'lastName', 'nickname', 'birthDate', 'fitnessLevel'];
-    
-    return requiredFields.every(field => userData[field] && userData[field].trim() !== '');
-  } catch (error) {
-    console.error('Errore nel controllo profilo:', error);
-    return false;
-  }
-}
 
 // Gestione form profilo
 document.getElementById('profileForm').addEventListener('submit', async (e) => {
