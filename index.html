@@ -62,8 +62,6 @@ onAuthStateChanged(auth, async (user) => {
     const isProfileComplete = await checkUserProfile(user.uid);
     if (isProfileComplete) {
       showPage('mainPage');
-	  // Carica dati header
-	  loadUserHeaderData();
     } else {
       showPage('profilePage');
     }
@@ -301,7 +299,6 @@ body{
   text-align:center;
   position:relative;
   overflow:hidden;
-  z-index: 2;
 }
 
 .header::before{
@@ -323,25 +320,110 @@ body{
   z-index:2;
 }
 
-.logout-btn{
-  background:rgba(239, 68, 68, 0.8);
-  color:white;
-  border:none;
-  border-radius:20px;
-  padding:10px 20px;
-  font-size:12px;
-  font-weight:600;
-  cursor:pointer;
-  transition:all 0.3s ease;
-  text-transform:uppercase;
-  letter-spacing:1px;
-  font-family:'Oswald', sans-serif;
+/* Hamburger Menu Styles */
+.hamburger-menu {
+  position: relative;
+  display: inline-block;
 }
 
-.logout-btn:hover{
-  background:#dc2626;
-  transform:translateY(-2px);
-  box-shadow:0 4px 15px rgba(239, 68, 68, 0.4);
+.hamburger-btn {
+  background: rgba(45, 45, 48, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  gap: 4px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hamburger-btn:hover {
+  background: rgba(60, 60, 67, 0.9);
+  transform: scale(1.05);
+}
+
+.hamburger-line {
+  width: 20px;
+  height: 2px;
+  background: #dcff00;
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: rgba(45, 45, 48, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  min-width: 180px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'Oswald', sans-serif;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-item:hover {
+  background: rgba(220, 255, 0, 0.1);
+  color: #dcff00;
+  padding-left: 24px;
+}
+
+.menu-icon {
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+.menu-item:hover .menu-icon {
+  opacity: 1;
 }
 
 .user-profile{
@@ -391,8 +473,6 @@ body{
   max-width:1000px;
   margin:0 auto;
   padding:30px 20px 20px;
-  z-index: 1;
-  position: relative;
 }
 
 .filters-section{
@@ -815,223 +895,26 @@ body{
   }
 }
 
-/* Profile Dropdown Styles */
-.profile-dropdown {
-  position: relative;
-  display: inline-block;
-  z-index: 10000;
-}
-
-.profile-trigger {
-  cursor: pointer;
-  position: relative;
-  z-index: 9997;
-}
-
-.profile-image {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #dcff00 0%, #b8d600 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 700;
-  color: #000000;
-  box-shadow: 0 4px 15px rgba(220, 255, 0, 0.4);
-  border: 2px solid rgba(220, 255, 0, 0.3);
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.profile-image:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(220, 255, 0, 0.6);
-}
-
-.profile-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.profile-image span {
-  font-family: 'Oswald', sans-serif;
-  letter-spacing: 1px;
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: rgba(45, 45, 48, 0.98);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 8px 0;
-  min-width: 180px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  z-index: 10001;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  margin-top: 8px;
-}
-
-.dropdown-menu.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.dropdown-item {
-  padding: 16px 20px;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'Oswald', sans-serif;
-  letter-spacing: 0.5px;
-  pointer-events: auto;
-  position: relative;
-}
-
-.dropdown-item:hover {
-  background: rgba(60, 60, 67, 0.8);
-  color: #dcff00;
-}
-
-.dropdown-item.logout {
-  color: #ff6b6b;
-}
-
-.dropdown-item.logout:hover {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ff5252;
-}
-
-.dropdown-item svg {
-  opacity: 0.7;
-}
-
-.dropdown-divider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-  margin: 8px 0;
-}
-
+/* Responsive per hamburger menu */
 @media (max-width: 768px) {
   .dropdown-menu {
+    right: -10px;
     min-width: 160px;
-	right: -10px;
   }
   
-  .dropdown-item {
-    padding: 18px 20px; /* Maggiore area touch su mobile */
+  .menu-item {
+    padding: 14px 16px;
+    font-size: 13px;
   }
   
-  .profile-image {
-    width: 40px;
-    height: 40px;
-    font-size: 14px;
+  .hamburger-btn {
+    width: 45px;
+    height: 45px;
   }
-}
-
-.header-back {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.back-btn-inline {
-  background: rgba(60, 60, 67, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: #ffffff;
-}
-
-.back-btn-inline:hover {
-  background: rgba(60, 60, 67, 0.8);
-  transform: translateX(-2px);
-}
-
-.profile-view {
-  text-align: left;
-  margin-bottom: 30px;
-}
-
-.profile-field {
-  margin-bottom: 20px;
-  padding: 15px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.profile-field:last-child {
-  border-bottom: none;
-}
-
-.field-label {
-  font-size: 12px;
-  color: #dcff00;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 5px;
-}
-
-.field-value {
-  font-size: 16px;
-  color: #ffffff;
-  font-weight: 500;
-}
-
-.field-value.empty {
-  color: rgba(255, 255, 255, 0.5);
-  font-style: italic;
-}
-
-.profile-image-view {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.profile-image-large {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #dcff00;
-  box-shadow: 0 8px 25px rgba(220, 255, 0, 0.4);
-}
-
-.profile-initials-large {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #dcff00 0%, #b8d600 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48px;
-  font-weight: 700;
-  color: #000000;
-  margin: 0 auto;
-  box-shadow: 0 8px 25px rgba(220, 255, 0, 0.4);
-  border: 3px solid rgba(220, 255, 0, 0.3);
+  
+  .hamburger-line {
+    width: 18px;
+  }
 }
 
 </style>
@@ -1189,29 +1072,23 @@ body{
 <div class="page" id="mainPage">
   <div class="header">
     <div class="header-top">
-  <div class="profile-dropdown">
-  <div class="profile-trigger" id="profileTrigger">
-    <div class="profile-image" id="headerProfileImage">
-      <span id="headerInitials">JC</span>
+  <div class="hamburger-menu">
+    <button class="hamburger-btn" onclick="toggleMenu()">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+    <div class="dropdown-menu" id="dropdownMenu">
+      <a href="#" class="menu-item" onclick="openProfile()">
+        <span class="menu-icon">👤</span>
+        Profilo
+      </a>
+      <a href="#" class="menu-item" onclick="logout()">
+        <span class="menu-icon">🚪</span>
+        Signout
+      </a>
     </div>
   </div>
-  <div class="dropdown-menu" id="dropdownMenu">
-    <div class="dropdown-item" onclick="openProfile()">
-      <!-- Icona SVG -->
-      Plan: Free
-    </div>
-    <div class="dropdown-divider"></div>
-    <div class="dropdown-item" onclick="openProfile()">
-      <!-- Icona SVG -->
-      Il Mio Profilo
-    </div>
-    <div class="dropdown-divider"></div>
-    <div class="dropdown-item logout" onclick="logout()">
-      <!-- Icona SVG -->
-      Logout
-    </div>
-  </div>
-</div>
 </div>
     <div class="user-profile">
       <div class="profile-avatar">JC</div>
@@ -1433,14 +1310,6 @@ async function logout() {
   }
 }
 
-function openProfile(){
-  if (window.currentUser) {  // Usa window.currentUser invece di currentUser
-    window.location.href='profile.html';
-  } else {
-    console.log('User not authenticated');
-  }
-}
-
 // Funzioni per i workout - VERSIONE CORRETTA
 function startABSWorkout(){
   if (window.currentUser) {  // Usa window.currentUser invece di currentUser
@@ -1621,10 +1490,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
       weight: document.getElementById('weight').value || null,
       height: document.getElementById('height').value || null,
       fitnessLevel: document.getElementById('fitnessLevel').value,
-      profileImage: document.getElementById('imagePreview').querySelector('img') ? 
-	  document.getElementById('imagePreview').querySelector('img').src : null,
-	  profileImageData: document.getElementById('imagePreview').querySelector('img') ? 
-	  document.getElementById('imagePreview').querySelector('img').src : null,
+      profileImage: null, // Per ora, gestiremo le immagini in un secondo momento
       updatedAt: new Date().toISOString()
     };
     
@@ -1636,11 +1502,6 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     
     console.log('Profilo salvato con successo');
     showPage('mainPage');
-	
-	// Aggiorna header dopo salvataggio
-setTimeout(() => {
-  loadUserHeaderData();
-}, 500);
     
   } catch (error) {
     console.error('Errore nel salvataggio profilo:', error);
@@ -1667,61 +1528,55 @@ document.getElementById('profileImage').addEventListener('change', function(e) {
   }
 });
 
-// Gestione dropdown profilo
-document.addEventListener('DOMContentLoaded', function() {
-  const profileTrigger = document.getElementById('profileTrigger');
-  const dropdownMenu = document.getElementById('dropdownMenu');
+// Funzione per aprire/chiudere il menu
+function toggleMenu() {
+  const menu = document.getElementById('dropdownMenu');
+  const btn = document.querySelector('.hamburger-btn');
   
-  if (profileTrigger && dropdownMenu) {
-    profileTrigger.addEventListener('click', function(e) {
-      e.stopPropagation();
-      dropdownMenu.classList.toggle('show');
-    });
-    
-    // Chiudi dropdown cliccando fuori
-    document.addEventListener('click', function() {
-      dropdownMenu.classList.remove('show');
-    });
-    
-    // Previeni chiusura cliccando sul menu
-    dropdownMenu.addEventListener('click', function(e) {
-      e.stopPropagation();
-    });
-  }
-});
+  menu.classList.toggle('show');
+  btn.classList.toggle('active');
+}
 
-// Carica e mostra i dati utente nell'header
-async function loadUserHeaderData() {
-  if (!window.currentUser) return;
+// Funzione per aprire il profilo
+function openProfile() {
+  if (window.currentUser) {
+    window.location.href = 'profile.html';
+  } else {
+    console.log('User not authenticated');
+  }
+  
+  // Chiudi il menu dopo il click
+  const menu = document.getElementById('dropdownMenu');
+  const btn = document.querySelector('.hamburger-btn');
+  menu.classList.remove('show');
+  btn.classList.remove('active');
+}
+
+// Modifica la funzione logout esistente per chiudere il menu
+async function logout() {
+  // Chiudi il menu
+  const menu = document.getElementById('dropdownMenu');
+  const btn = document.querySelector('.hamburger-btn');
+  menu.classList.remove('show');
+  btn.classList.remove('active');
   
   try {
-    const userDoc = await window.firestoreGetDoc(
-      window.firestoreDoc(window.firebaseDB, 'users', window.currentUser.uid)
-    );
-    
-    if (userDoc.exists()) {
-      const userData = userDoc.data();
-      updateHeaderProfile(userData);
-    }
+    await window.firebaseSignOut(window.firebaseAuth);
   } catch (error) {
-    console.error('Errore nel caricamento dati header:', error);
+    console.error('Errore durante il logout:', error);
   }
 }
 
-// Aggiorna l'immagine profilo nell'header
-function updateHeaderProfile(userData) {
-  const headerImage = document.getElementById('headerProfileImage');
-  const headerInitials = document.getElementById('headerInitials');
+// Chiudi il menu se si clicca fuori
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('dropdownMenu');
+  const btn = document.querySelector('.hamburger-btn');
   
-  if (userData.profileImageData) {
-    headerImage.innerHTML = `<img src="${userData.profileImageData}" alt="Profilo">`;
-  } else if (userData.firstName && userData.lastName) {
-    const initials = userData.firstName.charAt(0).toUpperCase() + 
-                    userData.lastName.charAt(0).toUpperCase();
-    headerInitials.textContent = initials;
+  if (!e.target.closest('.hamburger-menu')) {
+    menu.classList.remove('show');
+    btn.classList.remove('active');
   }
-}
-
+});
 </script>
 </body>
 </html>
