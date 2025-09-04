@@ -301,6 +301,7 @@ body{
   text-align:center;
   position:relative;
   overflow:hidden;
+  z-index: 2;
 }
 
 .header::before{
@@ -391,6 +392,7 @@ body{
   margin:0 auto;
   padding:30px 20px 20px;
   z-index: 1;
+  position: relative;
 }
 
 .filters-section{
@@ -817,7 +819,7 @@ body{
 .profile-dropdown {
   position: relative;
   display: inline-block;
-  z-index: 9998;
+  z-index: 10000;
 }
 
 .profile-trigger {
@@ -870,7 +872,7 @@ body{
   padding: 8px 0;
   min-width: 180px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  z-index: 9999;
+  z-index: 10001;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
