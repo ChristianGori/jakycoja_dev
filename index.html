@@ -43,25 +43,6 @@
   window.firebaseSignOut = signOut;
   window.firebaseSendPasswordReset = sendPasswordResetEmail;
 
-  // Funzione per controllare se il profilo è completo
-async function checkUserProfile(userId) {
-  try {
-    const userDoc = await window.firestoreGetDoc(window.firestoreDoc(window.firebaseDB, 'users', userId));
-    
-    if (!userDoc.exists()) {
-      return false;
-    }
-    
-    const userData = userDoc.data();
-    const requiredFields = ['firstName', 'lastName', 'nickname', 'birthDate', 'fitnessLevel'];
-    
-    return requiredFields.every(field => userData[field] && userData[field].trim() !== '');
-  } catch (error) {
-    console.error('Errore nel controllo profilo:', error);
-    return false;
-  }
-}
-  
   // Gestisci lo stato di autenticazione
 onAuthStateChanged(auth, async (user) => {
   window.currentUser = user;
@@ -80,16 +61,12 @@ onAuthStateChanged(auth, async (user) => {
     // Controlla se il profilo è completo
     const isProfileComplete = await checkUserProfile(user.uid);
     if (isProfileComplete) {
-	showPage('mainPage');
-	// Carica dati header
-	loadUserHeaderData();
-	// Inizializza dropdown come backup
-	setTimeout(() => {
-		initializeProfileDropdown();
-	}, 500);
-	} else {
-	showPage('profilePage');
-	}
+      showPage('mainPage');
+	  // Carica dati header
+	  loadUserHeaderData();
+    } else {
+      showPage('profilePage');
+    }
   } else {
     console.log('User not logged in');
     showPage('loginPage');
@@ -1228,15 +1205,16 @@ body{
         <span id="headerInitials">JC</span>
       </div>
     </div>
-    <div class="dropdown-item" id="profileMenuItem">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-    <circle cx="12" cy="7" r="4"></circle>
-  </svg>
-  Il Mio Profilo
-</div>
-<div class="dropdown-divider"></div>
-<div class="dropdown-item logout" id="logoutMenuItem">
+    <div class="dropdown-menu" id="dropdownMenu">
+      <div class="dropdown-item" onclick="showProfile()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        Il Mio Profilo
+      </div>
+      <div class="dropdown-divider"></div>
+      <div class="dropdown-item logout" onclick="logout()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
           <polyline points="16,17 21,12 16,7"></polyline>
@@ -1596,11 +1574,6 @@ function clearAllFilters() {
     filterWorkouts();
 }
 
-// Inizializzazione
-document.addEventListener('DOMContentLoaded', function() {
-    initializeFilters();
-    filterWorkouts();
-});
 
 window.addEventListener('load',()=>{
   try{
@@ -1608,6 +1581,24 @@ window.addEventListener('load',()=>{
   } catch(e) {}
 });
 
+// Funzione per controllare se il profilo è completo
+async function checkUserProfile(userId) {
+  try {
+    const userDoc = await window.firestoreGetDoc(window.firestoreDoc(window.firebaseDB, 'users', userId));
+    
+    if (!userDoc.exists()) {
+      return false;
+    }
+    
+    const userData = userDoc.data();
+    const requiredFields = ['firstName', 'lastName', 'nickname', 'birthDate', 'fitnessLevel'];
+    
+    return requiredFields.every(field => userData[field] && userData[field].trim() !== '');
+  } catch (error) {
+    console.error('Errore nel controllo profilo:', error);
+    return false;
+  }
+}
 
 // Gestione form profilo
 document.getElementById('profileForm').addEventListener('submit', async (e) => {
@@ -1675,19 +1666,22 @@ document.getElementById('profileImage').addEventListener('change', function(e) {
   }
 });
 
-// Funzione per inizializzare il dropdown
-function initializeProfileDropdown() {
+// Gestione dropdown profilo
+document.addEventListener('DOMContentLoaded', function() {
+  // Inizializza anche i filtri
+  initializeFilters();
+  filterWorkouts();
+  
+  // Gestione dropdown
+  setupDropdownEvents();
+});
+
+function setupDropdownEvents() {
   const profileTrigger = document.getElementById('profileTrigger');
   const dropdownMenu = document.getElementById('dropdownMenu');
-  const profileMenuItem = document.getElementById('profileMenuItem');
-  const logoutMenuItem = document.getElementById('logoutMenuItem');
   
   if (profileTrigger && dropdownMenu) {
-    // Rimuovi event listener esistenti per evitare duplicati
-    profileTrigger.replaceWith(profileTrigger.cloneNode(true));
-    const newProfileTrigger = document.getElementById('profileTrigger');
-    
-    newProfileTrigger.addEventListener('click', function(e) {
+    profileTrigger.addEventListener('click', function(e) {
       e.stopPropagation();
       dropdownMenu.classList.toggle('show');
     });
@@ -1701,32 +1695,6 @@ function initializeProfileDropdown() {
     dropdownMenu.addEventListener('click', function(e) {
       e.stopPropagation();
     });
-    
-    console.log('Dropdown profilo inizializzato');
-  } else {
-    console.log('Elementi dropdown non trovati');
-  }
-  
-  // Aggiungi event listener per i menu item
-  if (profileMenuItem) {
-    profileMenuItem.addEventListener('click', function(e) {
-      e.preventDefault();
-      console.log('Profile menu item cliccato');
-      showProfile();
-    });
-    console.log('Profile menu item inizializzato');
-  } else {
-    console.log('Profile menu item non trovato');
-  }
-  
-  if (logoutMenuItem) {
-    logoutMenuItem.addEventListener('click', function(e) {
-      e.preventDefault();
-      logout();
-    });
-    console.log('Logout menu item inizializzato');
-  } else {
-    console.log('Logout menu item non trovato');
   }
 }
 
@@ -1743,12 +1711,6 @@ async function loadUserHeaderData() {
       const userData = userDoc.data();
       updateHeaderProfile(userData);
     }
-    
-    // Inizializza il dropdown dopo aver caricato i dati
-    setTimeout(() => {
-      initializeProfileDropdown();
-    }, 100);
-    
   } catch (error) {
     console.error('Errore nel caricamento dati header:', error);
   }
@@ -1768,37 +1730,39 @@ function updateHeaderProfile(userData) {
   }
 }
 
-// Versione di test semplificata
+// Mostra pagina profilo
 function showProfile() {
+  console.log('showProfile chiamata'); // Debug
+  const dropdownMenu = document.getElementById('dropdownMenu');
+  if (dropdownMenu) {
+    dropdownMenu.classList.remove('show'); // Chiudi dropdown
+  }
+  loadProfileView();
+  showPage('viewProfilePage');
+}
 
 // Carica dati per visualizzazione profilo
 async function loadProfileView() {
-  console.log('loadProfileView chiamata');
-  
+  console.log('loadProfileView chiamata'); // Debug
   if (!window.currentUser) {
     console.log('Nessun utente autenticato');
     return;
   }
   
   try {
-    console.log('Caricamento dati per utente:', window.currentUser.uid);
     const userDoc = await window.firestoreGetDoc(
       window.firestoreDoc(window.firebaseDB, 'users', window.currentUser.uid)
     );
     
     if (userDoc.exists()) {
       const userData = userDoc.data();
-      console.log('Dati utente caricati:', userData);
+      console.log('Dati utente caricati:', userData); // Debug
       renderProfileView(userData);
     } else {
-      console.log('Documento utente non esistente');
-      // Renderizza vista vuota
-      renderProfileView({});
+      console.log('Documento utente non trovato');
     }
   } catch (error) {
     console.error('Errore nel caricamento profilo:', error);
-    // Renderizza vista vuota in caso di errore
-    renderProfileView({});
   }
 }
 
