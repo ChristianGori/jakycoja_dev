@@ -1211,12 +1211,12 @@ body{
     </div>
     <div class="dropdown-menu" id="dropdownMenu">
       <div class="dropdown-item" onclick="showProfile()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-        Il Mio Profilo
-      </div>
+		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+			<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+			<circle cx="12" cy="7" r="4"></circle>
+		</svg>
+		Il Mio Profilo
+		</div>
       <div class="dropdown-divider"></div>
       <div class="dropdown-item logout" onclick="logout()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1746,33 +1746,54 @@ function updateHeaderProfile(userData) {
 }
 
 // Mostra pagina profilo
-function showProfile() {
+async function showProfile() {
   console.log('showProfile chiamata');
-  loadProfileView();
-  showPage('viewProfilePage');
   
-  // Chiudi il dropdown
+  // Chiudi il dropdown prima
   const dropdownMenu = document.getElementById('dropdownMenu');
   if (dropdownMenu) {
     dropdownMenu.classList.remove('show');
+  }
+  
+  try {
+    // Carica i dati del profilo prima di mostrare la pagina
+    await loadProfileView();
+    showPage('viewProfilePage');
+  } catch (error) {
+    console.error('Errore nel caricamento profilo:', error);
+    // Mostra la pagina comunque, anche se c'è un errore
+    showPage('viewProfilePage');
   }
 }
 
 // Carica dati per visualizzazione profilo
 async function loadProfileView() {
-  if (!window.currentUser) return;
+  console.log('loadProfileView chiamata');
+  
+  if (!window.currentUser) {
+    console.log('Nessun utente autenticato');
+    return;
+  }
   
   try {
+    console.log('Caricamento dati per utente:', window.currentUser.uid);
     const userDoc = await window.firestoreGetDoc(
       window.firestoreDoc(window.firebaseDB, 'users', window.currentUser.uid)
     );
     
     if (userDoc.exists()) {
       const userData = userDoc.data();
+      console.log('Dati utente caricati:', userData);
       renderProfileView(userData);
+    } else {
+      console.log('Documento utente non esistente');
+      // Renderizza vista vuota
+      renderProfileView({});
     }
   } catch (error) {
     console.error('Errore nel caricamento profilo:', error);
+    // Renderizza vista vuota in caso di errore
+    renderProfileView({});
   }
 }
 
