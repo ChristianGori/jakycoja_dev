@@ -1206,7 +1206,7 @@ body{
       </div>
     </div>
     <div class="dropdown-menu" id="dropdownMenu">
-      <div class="dropdown-item" onclick="showProfile()">
+      <div class="dropdown-item" onclick="window.location.href='profile.html'">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
           <circle cx="12" cy="7" r="4"></circle>
@@ -1574,6 +1574,11 @@ function clearAllFilters() {
     filterWorkouts();
 }
 
+// Inizializzazione
+document.addEventListener('DOMContentLoaded', function() {
+    initializeFilters();
+    filterWorkouts();
+});
 
 window.addEventListener('load',()=>{
   try{
@@ -1668,15 +1673,6 @@ document.getElementById('profileImage').addEventListener('change', function(e) {
 
 // Gestione dropdown profilo
 document.addEventListener('DOMContentLoaded', function() {
-  // Inizializza anche i filtri
-  initializeFilters();
-  filterWorkouts();
-  
-  // Gestione dropdown
-  setupDropdownEvents();
-});
-
-function setupDropdownEvents() {
   const profileTrigger = document.getElementById('profileTrigger');
   const dropdownMenu = document.getElementById('dropdownMenu');
   
@@ -1696,7 +1692,7 @@ function setupDropdownEvents() {
       e.stopPropagation();
     });
   }
-}
+});
 
 // Carica e mostra i dati utente nell'header
 async function loadUserHeaderData() {
@@ -1732,22 +1728,13 @@ function updateHeaderProfile(userData) {
 
 // Mostra pagina profilo
 function showProfile() {
-  console.log('showProfile chiamata'); // Debug
-  const dropdownMenu = document.getElementById('dropdownMenu');
-  if (dropdownMenu) {
-    dropdownMenu.classList.remove('show'); // Chiudi dropdown
-  }
   loadProfileView();
   showPage('viewProfilePage');
 }
 
 // Carica dati per visualizzazione profilo
 async function loadProfileView() {
-  console.log('loadProfileView chiamata'); // Debug
-  if (!window.currentUser) {
-    console.log('Nessun utente autenticato');
-    return;
-  }
+  if (!window.currentUser) return;
   
   try {
     const userDoc = await window.firestoreGetDoc(
@@ -1756,10 +1743,7 @@ async function loadProfileView() {
     
     if (userDoc.exists()) {
       const userData = userDoc.data();
-      console.log('Dati utente caricati:', userData); // Debug
       renderProfileView(userData);
-    } else {
-      console.log('Documento utente non trovato');
     }
   } catch (error) {
     console.error('Errore nel caricamento profilo:', error);
