@@ -61,12 +61,16 @@ onAuthStateChanged(auth, async (user) => {
     // Controlla se il profilo è completo
     const isProfileComplete = await checkUserProfile(user.uid);
     if (isProfileComplete) {
-      showPage('mainPage');
-	  // Carica dati header
-	  loadUserHeaderData();
-    } else {
-      showPage('profilePage');
-    }
+	showPage('mainPage');
+	// Carica dati header
+	loadUserHeaderData();
+	// Inizializza dropdown come backup
+	setTimeout(() => {
+		initializeProfileDropdown();
+	}, 500);
+	} else {
+	showPage('profilePage');
+	}
   } else {
     console.log('User not logged in');
     showPage('loginPage');
@@ -1672,12 +1676,17 @@ document.getElementById('profileImage').addEventListener('change', function(e) {
 });
 
 // Gestione dropdown profilo
-document.addEventListener('DOMContentLoaded', function() {
+// Funzione per inizializzare il dropdown
+function initializeProfileDropdown() {
   const profileTrigger = document.getElementById('profileTrigger');
   const dropdownMenu = document.getElementById('dropdownMenu');
   
   if (profileTrigger && dropdownMenu) {
-    profileTrigger.addEventListener('click', function(e) {
+    // Rimuovi event listener esistenti per evitare duplicati
+    profileTrigger.replaceWith(profileTrigger.cloneNode(true));
+    const newProfileTrigger = document.getElementById('profileTrigger');
+    
+    newProfileTrigger.addEventListener('click', function(e) {
       e.stopPropagation();
       dropdownMenu.classList.toggle('show');
     });
@@ -1691,8 +1700,12 @@ document.addEventListener('DOMContentLoaded', function() {
     dropdownMenu.addEventListener('click', function(e) {
       e.stopPropagation();
     });
+    
+    console.log('Dropdown profilo inizializzato');
+  } else {
+    console.log('Elementi dropdown non trovati');
   }
-});
+}
 
 // Carica e mostra i dati utente nell'header
 async function loadUserHeaderData() {
@@ -1707,6 +1720,12 @@ async function loadUserHeaderData() {
       const userData = userDoc.data();
       updateHeaderProfile(userData);
     }
+    
+    // Inizializza il dropdown dopo aver caricato i dati
+    setTimeout(() => {
+      initializeProfileDropdown();
+    }, 100);
+    
   } catch (error) {
     console.error('Errore nel caricamento dati header:', error);
   }
@@ -1728,8 +1747,15 @@ function updateHeaderProfile(userData) {
 
 // Mostra pagina profilo
 function showProfile() {
+  console.log('showProfile chiamata');
   loadProfileView();
   showPage('viewProfilePage');
+  
+  // Chiudi il dropdown
+  const dropdownMenu = document.getElementById('dropdownMenu');
+  if (dropdownMenu) {
+    dropdownMenu.classList.remove('show');
+  }
 }
 
 // Carica dati per visualizzazione profilo
