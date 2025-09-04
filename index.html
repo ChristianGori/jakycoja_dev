@@ -1079,15 +1079,16 @@ body{
       <span class="hamburger-line"></span>
     </button>
     <div class="dropdown-menu" id="dropdownMenu">
-      <a href="#" class="menu-item" onclick="openProfile()">
-        <span class="menu-icon">👤</span>
-        Profilo
-      </a>
-      <a href="#" class="menu-item" onclick="logout()">
-        <span class="menu-icon">🚪</span>
-        Signout
-      </a>
+    <div class="dropdown-item" onclick="openProfile()">
+      <!-- Icona SVG -->
+      Il Mio Profilo
     </div>
+    <div class="dropdown-divider"></div>
+    <div class="dropdown-item logout" onclick="logout()">
+      <!-- Icona SVG -->
+      Logout
+    </div>
+  </div>
   </div>
 </div>
     <div class="user-profile">
