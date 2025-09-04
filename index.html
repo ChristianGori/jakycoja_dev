@@ -62,8 +62,6 @@ onAuthStateChanged(auth, async (user) => {
     const isProfileComplete = await checkUserProfile(user.uid);
     if (isProfileComplete) {
       showPage('mainPage');
-	  // Carica dati header
-	  loadUserHeaderData();
     } else {
       showPage('profilePage');
     }
@@ -812,226 +810,6 @@ body{
   }
 }
 
-/* Profile Dropdown Styles */
-.profile-dropdown {
-  position: relative;
-  display: inline-block;
-  z-index: 9998;
-}
-
-.profile-trigger {
-  cursor: pointer;
-  position: relative;
-  z-index: 9997;
-}
-
-.profile-image {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #dcff00 0%, #b8d600 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 700;
-  color: #000000;
-  box-shadow: 0 4px 15px rgba(220, 255, 0, 0.4);
-  border: 2px solid rgba(220, 255, 0, 0.3);
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.profile-image:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(220, 255, 0, 0.6);
-}
-
-.profile-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.profile-image span {
-  font-family: 'Oswald', sans-serif;
-  letter-spacing: 1px;
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: rgba(45, 45, 48, 0.98);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 8px 0;
-  min-width: 180px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  z-index: 9999;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  margin-top: 8px;
-}
-
-.dropdown-menu.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.dropdown-item {
-  padding: 16px 20px;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'Oswald', sans-serif;
-  letter-spacing: 0.5px;
-  pointer-events: auto;
-  position: relative;
-  z-index: 1;
-}
-
-.dropdown-item:hover {
-  background: rgba(60, 60, 67, 0.8);
-  color: #dcff00;
-}
-
-.dropdown-item.logout {
-  color: #ff6b6b;
-}
-
-.dropdown-item.logout:hover {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ff5252;
-}
-
-.dropdown-item svg {
-  opacity: 0.7;
-}
-
-.dropdown-divider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-  margin: 8px 0;
-}
-
-@media (max-width: 768px) {
-  .dropdown-menu {
-    min-width: 160px;
-	right: -10px;
-  }
-  
-  .dropdown-item {
-    padding: 18px 20px; /* Maggiore area touch su mobile */
-  }
-  
-  .profile-image {
-    width: 40px;
-    height: 40px;
-    font-size: 14px;
-  }
-}
-
-.header-back {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.back-btn-inline {
-  background: rgba(60, 60, 67, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: #ffffff;
-}
-
-.back-btn-inline:hover {
-  background: rgba(60, 60, 67, 0.8);
-  transform: translateX(-2px);
-}
-
-.profile-view {
-  text-align: left;
-  margin-bottom: 30px;
-}
-
-.profile-field {
-  margin-bottom: 20px;
-  padding: 15px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.profile-field:last-child {
-  border-bottom: none;
-}
-
-.field-label {
-  font-size: 12px;
-  color: #dcff00;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 5px;
-}
-
-.field-value {
-  font-size: 16px;
-  color: #ffffff;
-  font-weight: 500;
-}
-
-.field-value.empty {
-  color: rgba(255, 255, 255, 0.5);
-  font-style: italic;
-}
-
-.profile-image-view {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.profile-image-large {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #dcff00;
-  box-shadow: 0 8px 25px rgba(220, 255, 0, 0.4);
-}
-
-.profile-initials-large {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #dcff00 0%, #b8d600 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48px;
-  font-weight: 700;
-  color: #000000;
-  margin: 0 auto;
-  box-shadow: 0 8px 25px rgba(220, 255, 0, 0.4);
-  border: 3px solid rgba(220, 255, 0, 0.3);
-}
-
 </style>
 </head>
 <body>
@@ -1187,30 +965,8 @@ body{
 <div class="page" id="mainPage">
   <div class="header">
     <div class="header-top">
-  <div class="profile-dropdown">
-  <div class="profile-trigger" id="profileTrigger">
-    <div class="profile-image" id="headerProfileImage">
-      <span id="headerInitials">JC</span>
+      <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
-  </div>
-  <div class="dropdown-menu" id="dropdownMenu">
-    <div class="dropdown-item" onclick="openProfile()">
-      <!-- Icona SVG -->
-      Plan: Free
-    </div>
-    <div class="dropdown-divider"></div>
-    <div class="dropdown-item" onclick="openProfile()">
-      <!-- Icona SVG -->
-      Il Mio Profilo
-    </div>
-    <div class="dropdown-divider"></div>
-    <div class="dropdown-item logout" onclick="logout()">
-      <!-- Icona SVG -->
-      Logout
-    </div>
-  </div>
-</div>
-</div>
     <div class="user-profile">
       <div class="profile-avatar">JC</div>
       <div class="user-info">
@@ -1431,14 +1187,6 @@ async function logout() {
   }
 }
 
-function openProfile(){
-  if (window.currentUser) {  // Usa window.currentUser invece di currentUser
-    window.location.href='profile.html';
-  } else {
-    console.log('User not authenticated');
-  }
-}
-
 // Funzioni per i workout - VERSIONE CORRETTA
 function startABSWorkout(){
   if (window.currentUser) {  // Usa window.currentUser invece di currentUser
@@ -1619,10 +1367,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
       weight: document.getElementById('weight').value || null,
       height: document.getElementById('height').value || null,
       fitnessLevel: document.getElementById('fitnessLevel').value,
-      profileImage: document.getElementById('imagePreview').querySelector('img') ? 
-	  document.getElementById('imagePreview').querySelector('img').src : null,
-	  profileImageData: document.getElementById('imagePreview').querySelector('img') ? 
-	  document.getElementById('imagePreview').querySelector('img').src : null,
+      profileImage: null, // Per ora, gestiremo le immagini in un secondo momento
       updatedAt: new Date().toISOString()
     };
     
@@ -1634,11 +1379,6 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     
     console.log('Profilo salvato con successo');
     showPage('mainPage');
-	
-	// Aggiorna header dopo salvataggio
-setTimeout(() => {
-  loadUserHeaderData();
-}, 500);
     
   } catch (error) {
     console.error('Errore nel salvataggio profilo:', error);
@@ -1664,62 +1404,6 @@ document.getElementById('profileImage').addEventListener('change', function(e) {
     preview.innerHTML = '';
   }
 });
-
-// Gestione dropdown profilo
-document.addEventListener('DOMContentLoaded', function() {
-  const profileTrigger = document.getElementById('profileTrigger');
-  const dropdownMenu = document.getElementById('dropdownMenu');
-  
-  if (profileTrigger && dropdownMenu) {
-    profileTrigger.addEventListener('click', function(e) {
-      e.stopPropagation();
-      dropdownMenu.classList.toggle('show');
-    });
-    
-    // Chiudi dropdown cliccando fuori
-    document.addEventListener('click', function() {
-      dropdownMenu.classList.remove('show');
-    });
-    
-    // Previeni chiusura cliccando sul menu
-    dropdownMenu.addEventListener('click', function(e) {
-      e.stopPropagation();
-    });
-  }
-});
-
-// Carica e mostra i dati utente nell'header
-async function loadUserHeaderData() {
-  if (!window.currentUser) return;
-  
-  try {
-    const userDoc = await window.firestoreGetDoc(
-      window.firestoreDoc(window.firebaseDB, 'users', window.currentUser.uid)
-    );
-    
-    if (userDoc.exists()) {
-      const userData = userDoc.data();
-      updateHeaderProfile(userData);
-    }
-  } catch (error) {
-    console.error('Errore nel caricamento dati header:', error);
-  }
-}
-
-// Aggiorna l'immagine profilo nell'header
-function updateHeaderProfile(userData) {
-  const headerImage = document.getElementById('headerProfileImage');
-  const headerInitials = document.getElementById('headerInitials');
-  
-  if (userData.profileImageData) {
-    headerImage.innerHTML = `<img src="${userData.profileImageData}" alt="Profilo">`;
-  } else if (userData.firstName && userData.lastName) {
-    const initials = userData.firstName.charAt(0).toUpperCase() + 
-                    userData.lastName.charAt(0).toUpperCase();
-    headerInitials.textContent = initials;
-  }
-}
-
 </script>
 </body>
 </html>
