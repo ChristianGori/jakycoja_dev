@@ -816,10 +816,13 @@ body{
 .profile-dropdown {
   position: relative;
   display: inline-block;
+  z-index: 9998;
 }
 
 .profile-trigger {
   cursor: pointer;
+  position: relative;
+  z-index: 9997;
 }
 
 .profile-image {
@@ -860,14 +863,18 @@ body{
   position: absolute;
   top: 100%;
   right: 0;
-  background: rgba(45, 45, 48, 0.95);
-  backdrop-filter: blur(20px);
+  background: rgba(45, 45, 48, 0.98);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 8px 0;
   min-width: 180px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  z-index: 9999;   /* 🔼 portato sopra tutto */
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  margin-top: 8px;
 }
 
 .dropdown-menu.show {
@@ -877,7 +884,7 @@ body{
 }
 
 .dropdown-item {
-  padding: 12px 16px;
+  padding: 16px 20px;
   color: #ffffff;
   font-size: 14px;
   font-weight: 500;
@@ -888,6 +895,9 @@ body{
   gap: 10px;
   font-family: 'Oswald', sans-serif;
   letter-spacing: 0.5px;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .dropdown-item:hover {
@@ -917,6 +927,11 @@ body{
 @media (max-width: 768px) {
   .dropdown-menu {
     min-width: 160px;
+	right: -10px;
+  }
+  
+  .dropdown-item {
+    padding: 18px 20px; /* Maggiore area touch su mobile */
   }
   
   .profile-image {
@@ -1173,38 +1188,28 @@ body{
   <div class="header">
     <div class="header-top">
   <div class="profile-dropdown">
-    <div class="profile-trigger" id="profileTrigger">
-      <div class="profile-image" id="headerProfileImage">
-        <span id="headerInitials">JC</span>
-      </div>
-    </div>
-    <div class="dropdown-menu" id="dropdownMenu">
-	  <div class="dropdown-item" onclick="openProfile()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-        Plan: Free
-      </div>
-      <div class="dropdown-divider"></div>
-      <div class="dropdown-item" onclick="openProfile()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-        Il Mio Profilo
-      </div>
-      <div class="dropdown-divider"></div>
-      <div class="dropdown-item logout" onclick="logout()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-          <polyline points="16,17 21,12 16,7"></polyline>
-          <line x1="21" y1="12" x2="9" y2="12"></line>
-        </svg>
-        Logout
-      </div>
+  <div class="profile-trigger" id="profileTrigger">
+    <div class="profile-image" id="headerProfileImage">
+      <span id="headerInitials">JC</span>
     </div>
   </div>
+  <div class="dropdown-menu" id="dropdownMenu">
+    <div class="dropdown-item" onclick="openProfile()">
+      <!-- Icona SVG -->
+      Plan: Free
+    </div>
+    <div class="dropdown-divider"></div>
+    <div class="dropdown-item" onclick="openProfile()">
+      <!-- Icona SVG -->
+      Il Mio Profilo
+    </div>
+    <div class="dropdown-divider"></div>
+    <div class="dropdown-item logout" onclick="logout()">
+      <!-- Icona SVG -->
+      Logout
+    </div>
+  </div>
+</div>
 </div>
     <div class="user-profile">
       <div class="profile-avatar">JC</div>
